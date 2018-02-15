@@ -3,6 +3,8 @@ version: 0.2
 phases:
   pre_build:
     commands:
+      - echo Installing pre-requisites
+      - pip install ansible
       - echo Running sanity checks...
       - ansible --version
   build:
