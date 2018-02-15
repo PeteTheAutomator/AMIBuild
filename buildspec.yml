@@ -1,0 +1,10 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Running sanity checks...
+      - ansible --version
+  build:
+    commands:
+      - echo Build started on `date`
