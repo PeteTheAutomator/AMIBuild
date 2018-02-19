@@ -4,9 +4,11 @@ phases:
   pre_build:
     commands:
       - echo Installing pre-requisites
-      - pip install ansible
+      - pip install ansible boto3
       - echo Running sanity checks...
       - ansible --version
   build:
     commands:
       - echo Build started on `date`
+      - ansible-galaxy install -r requirements.txt -p roles
+      - ansible-playbook -i 'localhost,' playbook.yml

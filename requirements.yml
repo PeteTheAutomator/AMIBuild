@@ -1,0 +1,2 @@
+- name: amibuilder
+  src: https://github.com/PeteTheAutomator/ansible-role-amibuilder.git
