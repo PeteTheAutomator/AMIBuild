@@ -9,6 +9,7 @@ phases:
       - env
       - pip list
       - ansible --version
+      - python debug.py
   build:
     commands:
       - echo Build started on `date`
