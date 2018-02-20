@@ -5,6 +5,7 @@ phases:
     commands:
       - echo Installing pre-requisites
       - pip install ansible boto
+      - pip install boto3
       - echo Running sanity checks...
       - env
       - pip list
