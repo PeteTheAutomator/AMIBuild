@@ -4,9 +4,10 @@ phases:
   pre_build:
     commands:
       - echo Installing pre-requisites
-      - apt-get update -y && apt-get install -y ansible python-boto
+      - pip install ansible boto
       - echo Running sanity checks...
       - env
+      - pip list
       - ansible --version
   build:
     commands:
