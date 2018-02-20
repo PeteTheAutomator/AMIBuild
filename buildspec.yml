@@ -3,14 +3,9 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      - echo Installing pre-requisites
-      - pip install ansible boto
-      - pip install boto3
       - echo Running sanity checks...
       - env
-      - pip list
       - ansible --version
-      - python debug.py
   build:
     commands:
       - echo Build started on `date`
