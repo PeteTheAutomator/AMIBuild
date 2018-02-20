@@ -4,10 +4,7 @@ phases:
   pre_build:
     commands:
       - echo Installing pre-requisites
-      - pip install virtualenv
-      - virtualenv /var/tmp/foo
-      - source /var/tmp/foo/bin/activate
-      - pip install ansible boto
+      - apt-get update -y && apt-get install -y ansible python-boto
       - echo Running sanity checks...
       - env
       - ansible --version
