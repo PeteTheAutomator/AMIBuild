@@ -12,8 +12,6 @@ creds_url="http://169.254.170.2" + os.environ['AWS_CONTAINER_CREDENTIALS_RELATIV
 r = requests.get(creds_url)
 d = json.loads(r._content)
 
-d = json.loads(example)
-
 creds = "aws_access_key: " + d['AccessKeyId'] + '\n'
 creds += "aws_secret_key: " + d['SecretAccessKey'] + '\n'
 creds += "security_token: " + d['Token']
