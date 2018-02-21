@@ -6,7 +6,7 @@ phases:
       - echo Running sanity checks...
       - env
       - ansible --version
-      - curl http://${AWS_CONTAINER_CREDENTIALS_RELATIVE_URI}
+      - echo "creds: " && cat ${AWS_CONTAINER_CREDENTIALS_RELATIVE_URI}
   build:
     commands:
       - echo Build started on `date`
