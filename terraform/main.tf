@@ -4,4 +4,5 @@ module "codebuild" {
     codebuild_project_description = "POC for AMI Build Pipeline"
     codebuild_source_type = "GITHUB"
     codebuild_source_location = "https://github.com/PeteTheAutomator/AMIBuild.git"
+    codebuild_image = "docker.io/petetheautomator/ansible"
 }
