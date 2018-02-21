@@ -9,5 +9,4 @@ phases:
   build:
     commands:
       - echo Build started on `date`
-      - ansible-galaxy install -r requirements.yml -p roles
-      - ansible-playbook -i 'localhost,' playbook.yml
+      - cd ansible && ansible-galaxy install -r requirements.yml -p roles && ansible-playbook -i 'localhost,' playbook.yml

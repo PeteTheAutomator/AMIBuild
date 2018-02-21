@@ -3,5 +3,6 @@
   gather_facts: no
   roles:
     - role: amibuilder
+      region: eu-west-2
       image: ami-403e2524
       vpc_subnet_id: subnet-7316010b
