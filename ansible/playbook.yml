@@ -53,7 +53,6 @@
   become: True
   gather_facts: True
   remote_user: ec2-user
-  connection: ssh
   roles:
     - role: myapp
 
