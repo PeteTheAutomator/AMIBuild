@@ -7,7 +7,7 @@
     - role: amibuilder
       region: eu-west-2
       image: ami-403e2524
-      vpc_subnet_id: subnet-7316010b
+      vpc_subnet_id: subnet-5a2a3a21
       amibuilder_mode: boot
 
   post_tasks:
@@ -44,5 +44,5 @@
     - role: amibuilder
       region: eu-west-2
       image: ami-403e2524
-      vpc_subnet_id: subnet-7316010b
+      vpc_subnet_id: subnet-5a2a3a21
       amibuilder_mode: bake
