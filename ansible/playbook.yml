@@ -52,18 +52,7 @@
   hosts: launched
   become: True
   gather_facts: True
-  roles:
-    - role: myapp
-
-
-#- hosts: local
-#  connection: local
-#  vars_files:
-#    - creds.yml
-#  gather_facts: no
+  remote_user: ec2-user
 #  roles:
-#    - role: amibuilder
-#      region: eu-west-2
-#      image: ami-403e2524
-#      vpc_subnet_id: subnet-5a2a3a21
-#      amibuilder_mode: bake
+#    - role: myapp
+

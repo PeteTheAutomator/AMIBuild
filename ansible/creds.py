@@ -21,3 +21,10 @@ with open('creds.yml', 'w') as fh:
 
 fh.close()
 
+
+if 'SSH_PRIV_KEY' in os.environ.keys():
+    with open('key.pem', 'w') as fh:
+        fh.write(os.environ['SSH_PRIV_KEY'])
+
+    fh.close()
+    os.chmod('key.pem', 0600)
