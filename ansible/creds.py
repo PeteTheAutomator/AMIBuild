@@ -23,6 +23,7 @@ fh.close()
 
 
 if 'SSH_PRIV_KEY' in os.environ.keys():
+    print("SSH_PRIV_KEY environment variable set - writing contents to key.pem")
     with open('key.pem', 'w') as fh:
         fh.write(os.environ['SSH_PRIV_KEY'])
 

@@ -8,4 +8,4 @@ phases:
   build:
     commands:
       - echo Build started on `date`
-      - cd ansible && python creds.py && ansible-galaxy install -r requirements.yml -p roles && ansible-playbook -vvvv -i inventory.ini --private-key=key.pem -e 'host_key_checking=False' playbook.yml
+      - cd ansible && python creds.py && echo "KEY CONTENTS..." && cat key.pem && ansible-galaxy install -r requirements.yml -p roles && ansible-playbook -vvvv -i inventory.ini --private-key=key.pem -e 'host_key_checking=False' playbook.yml
