@@ -14,6 +14,6 @@ phases:
   build:
     commands:
       - echo Build started on `date`
-      - mkdir ~/.ssh && chmod 700 ~/.ssh && echo $SSH_PRIV_KEY > ~/.ssh/key.pem && chmod 600 ~/.ssh/key.pem
-      - echo WTF && cat ~/.ssh/key.pem && wc -l ~/.ssh/key.pem
+      - mkdir ~/.ssh && chmod 700 ~/.ssh && echo "-----BEGIN RSA PRIVATE KEY-----" > ~/.ssh/key.pem && echo $SSH_PRIV_KEY | tr ' ' '\n' | tail -n +5 | head -n -4 >> ~/.ssh/key.pem && echo "-----END RSA PRIVATE KEY-----" >> ~/.ssh/key.pem && chmod 600 ~/.ssh/key.pem
+      - echo WTF && cat ~/.ssh/key.pem && wc -l ~/.ssh/key.pem && cksum ~/.ssh/key.pem
       - cd ansible && python creds.py && ansible-galaxy install -r requirements.yml -p roles && ansible-playbook -vvvv -i inventory.ini --private-key=~/.ssh/key.pem -e 'host_key_checking=False' playbook.yml
