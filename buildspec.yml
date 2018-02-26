@@ -1,5 +1,9 @@
 version: 0.2
 
+env:
+  parameter-store:
+    SSH_PRIV_KEY: "AMIBuild-Key"
+
 phases:
   pre_build:
     commands:
@@ -8,4 +12,6 @@ phases:
   build:
     commands:
       - echo Build started on `date`
-      - cd ansible && export SSH_PRIV_KEY && python creds.py && ansible-galaxy install -r requirements.yml -p roles && ansible-playbook -vvvv -i inventory.ini --private-key=key.pem -e 'host_key_checking=False' playbook.yml
+      - echo SSH_PRIV_KEY > ansible/key.pem && chmod 600 ansible/key.pem
+      - echo "KEY IS: " && cat ansible/key.pem
+      - cd ansible && python creds.py && ansible-galaxy install -r requirements.yml -p roles && ansible-playbook -vvvv -i inventory.ini --private-key=key.pem -e 'host_key_checking=False' playbook.yml
