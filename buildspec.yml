@@ -1,6 +1,8 @@
 version: 0.2
 
 env:
+  variables:
+    ANSIBLE_HOST_KEY_CHECKING: "False"
   parameter-store:
     SSH_PRIV_KEY: "AMIBuild-Key"
 
