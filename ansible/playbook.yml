@@ -40,10 +40,33 @@
         port: 22
         timeout: 120
 
-- hosts: launched
+- hosts: ec2_launched
   become: True
   gather_facts: True
   remote_user: ec2-user
   roles:
     - role: myapp
+
+
+- hosts: localhost
+  gather_facts: no
+  vars_files:
+    - creds.yml
+  vars:
+    - region: eu-west-2
+    - image: ami-403e2524
+    - vpc_subnet_id: subnet-5a2a3a21  
+  tasks:
+    - name: create AMI
+      ec2_ami:
+        region: "{{ region }}"
+        aws_access_key: "{{ aws_access_key }}"
+        aws_secret_key: "{{ aws_secret_key }}"
+        security_token: "{{ security_token }}"
+        instance: "{{ ami_instance.tagged_instances.0.id }}"
+        state: present
+        name: "TEST AMI {{ ansible_date_time.iso8601 }}"
+        description: "TEST AMI - description goes here {{ ansible_date_time.iso8601 }}"
+        wait: yes
+      register: ami_build
 
