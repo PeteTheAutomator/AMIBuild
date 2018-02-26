@@ -9,7 +9,7 @@
     - vpc_subnet_id: subnet-5a2a3a21
   tasks:
     - name: Boot EC2 Instance
-      ec2:
+      ami_instance:
         region: "{{ region }}"
         aws_access_key: "{{ aws_access_key }}"
         aws_secret_key: "{{ aws_secret_key }}"
@@ -24,32 +24,23 @@
         assign_public_ip: yes
         count_tag:
           Name: AMIBuild
+        instance_tags:
+          Name: AMIBuild
         exact_count: 1
-      register: ec2
-
-    - name: debug connectivity
-      debug:
-        msg: "ip is {{item.private_ip}}"
-      with_items: "{{ ec2.instances }}"
+      register: ami_instance
 
     - name: Add new instance to host group
       add_host:
-        hostname: "{{ item.private_ip }}"
-        groupname: launched
-      with_items: "{{ ec2.instances }}"
+        name: "{{ ami_instance.tagged_instances.0.private_ip }}"
+        groups: ec2_launched
 
     - name: Wait for SSH to come up
       wait_for:
-        host: "{{ item.private_ip }}"
+        host: "{{ ami_instance.tagged_instances.0.private_ip }}"
         port: 22
-        delay: 10
-        timeout: 320
-        state: started
-      with_items: "{{ ec2.instances }}"
+        timeout: 120
 
-
-- name: Configure instance(s)
-  hosts: launched
+- hosts: launched
   become: True
   gather_facts: True
   remote_user: ec2-user
