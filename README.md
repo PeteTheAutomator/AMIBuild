@@ -9,6 +9,7 @@ Description
 
 TODO: full description & drawing
 
+![AMI Build Process Drawing](docs/AMIBuild-Process.png)
 
 Prerequisites
 -------------
