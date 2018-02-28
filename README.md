@@ -13,7 +13,7 @@ TODO: full description & drawing
 Prerequisites
 -------------
 
-AWS CodeBuild must be run in a VPC Subnet with a NAT Gateway as mentioned in the "Best Practices for VPCs" section in [this document](https://docs.aws.amazon.com/codebuild/latest/userguide/vpc-support.html)  A detailed guide to configuring a suitable Subnet, NAT Gateway and Routing can be found [here](https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide//VPC_Scenario2.html).
+AWS CodeBuild must be run in a VPC Subnet with a NAT Gateway as mentioned in the "Best Practices for VPCs" section in [this document](https://docs.aws.amazon.com/codebuild/latest/userguide/vpc-support.html#best-practices-for-vpcs)  A detailed guide to configuring a suitable Subnet, NAT Gateway and Routing can be found [here](https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide//VPC_Scenario2.html).
 
 
 CodeBuild
