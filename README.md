@@ -7,7 +7,7 @@ POC pipeline for AMI building/baking
 Description
 -----------
 
-TODO: full description & drawing
+This project automates the creation of a Continuous Delivery pipeline for "baking" AWS AMIs.  It uses Terraform to provision an AWS CodeBuild Project, in order to execute Ansible playbooks/roles which provision an EC2 instance and carry-out OS confuration & software installations for baking into an AMI appliance.  The advantage of using CodeBuild is it provides a consistent execution workflow and all reduced costs - resources are required only for the duration of the build.
 
 ![AMI Build Process Drawing](docs/AMIBuild-Process.png)
 
@@ -43,6 +43,9 @@ docker push petetheautomator/ansible
 Building an AMI
 ---------------
 
-Locate the "AMIBuild-Testing" CodeBuild project in the AWS Console and build from there.
+Locate the "AMIBuild-Testing" CodeBuild project in the AWS Console and build from there, or you can use awscli like so...
 
-TODO: awscli examples
+```
+aws codebuild start-build --project-name AMIBuild-Testing
+```
+
