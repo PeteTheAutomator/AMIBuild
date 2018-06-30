@@ -8,4 +8,5 @@ module "codebuild" {
     codebuild_vpc_id = "vpc-d1a64fb8"
     codebuild_subnets = ["subnet-5a2a3a21"]
     codebuild_security_group_ids = ["sg-902c74f8"]
+    codebuild_public_subnet_id = "subnet-7316010b"
 }
