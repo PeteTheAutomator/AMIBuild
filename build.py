@@ -14,6 +14,8 @@ REGION = os.environ['REGION']
 def argument_parser():
     parser = ArgumentParser(description='AWS CodeBuild Manager - starts project builds and captures the output')
     parser.add_argument('-p', '--project', help='the name of the CodeBuild project', required=True)
+    parser.add_argument('-i', '--buildid', help='unique id / build reference', required=True)
+    parser.add_argument('-b', '--bucket', help='S3 bucket for CodeBuild artifacts', required=True)
     return vars(parser.parse_args())
 
 
@@ -36,8 +38,9 @@ class CodeBuildManager:
         response = self.client.batch_get_builds(ids=[build_id])
         return response
 
-    def start_build(self, project_name):
-        response = self.client.start_build(projectName=project_name)
+    def start_build(self, project_name, s3_source_location):
+        response = self.client.start_build(projectName=project_name,
+                                           sourceLocationOverride=s3_source_location)
         return response
 
 
@@ -55,41 +58,73 @@ class CloudWatchLogsManager:
         return response
 
 
+class S3BucketManager:
+    def __init__(self):
+        self.client = boto3.client('s3',
+                                   aws_access_key_id=ACCESS_KEY,
+                                   aws_secret_access_key=SECRET_KEY,
+                                   region_name=REGION)
+
+    def upload_file(self, bucket, filename, key):
+        response = self.client.upload_file(Bucket=bucket,
+                                           Filename=filename,
+                                           Key=key)
+        return response
+
+
 class Build:
-    def __init__(self, project_name):
+    '''
+    Example: Capsule-123
+    arn:aws:s3:::assetto/Capsule-123.zip
+    '''
+    def __init__(self, project_name, build_id, bucket):
         self.project_name = project_name
+        self.build_id = build_id
+        self.bucket = bucket
+        self.artifact_location = 'arn:aws:s3:::%s/%s-%s.zip' % (self.bucket, self.project_name, self.build_id)
         self.cbm = CodeBuildManager()
         self.cwlm = CloudWatchLogsManager()
-        self.build_id = None
-        self.build_details = None
-        self.build_status = None
+        self.s3bm = S3BucketManager()
+        self.codebuild_build_id = None
+        self.codebuild_build_details = None
+        self.codebuild_build_status = None
         self.log_group_name = None
         self.log_stream_name = None
+
+    def upload_artifacts(self):
+        artifact_zipfile = self.project_name + '-' + self.build_id + '.zip'
+        if not os.path.isfile(artifact_zipfile):
+            print('codebuild artifact zipfile not found: %s' % artifact_zipfile)
+            sys.exit(1)
+        else:
+            self.s3bm.upload_file(bucket=self.bucket, filename=artifact_zipfile, key=artifact_zipfile)
 
     def create(self):
         project_list = self.cbm.get_projects()['projects']
         if self.project_name not in project_list:
-            print('no such project: {0}'.format(self.project_name))
+            print('no such project: %s' % self.project_name)
             sys.exit(1)
 
-        response = self.cbm.start_build(self.project_name)
-        self.build_id = response['build']['id']
+        # TODO: check the s3 build source exists
+
+        response = self.cbm.start_build(project_name=self.project_name, s3_source_location=self.artifact_location)
+        self.codebuild_build_id = response['build']['id']
 
     def get_details(self):
-        self.build_details = self.cbm.get_build_details(self.build_id)['builds'][0]
-        self.build_status = self.build_details['buildStatus']
-        self.log_group_name = self.build_details['logs']['groupName']
-        self.log_stream_name = self.build_details['logs']['streamName']
-        return self.build_status
+        self.codebuild_build_details = self.cbm.get_build_details(self.codebuild_build_id)['builds'][0]
+        self.codebuild_build_status = self.codebuild_build_details['buildStatus']
+        self.log_group_name = self.codebuild_build_details['logs']['groupName']
+        self.log_stream_name = self.codebuild_build_details['logs']['streamName']
+        return self.codebuild_build_status
 
     @property
     def current_phase(self):
-        if 'phaseStatus' in self.build_details['phases'][-1]:
-            phase_status = self.build_details['phases'][-1]
+        if 'phaseStatus' in self.codebuild_build_details['phases'][-1]:
+            phase_status = self.codebuild_build_details['phases'][-1]
         else:
             phase_status = 'N/A'
 
-        return self.build_details['phases'][-1]['phaseType'], phase_status
+        return self.codebuild_build_details['phases'][-1]['phaseType'], phase_status
 
     def get_build_logs(self):
         results = []
@@ -104,7 +139,8 @@ class Build:
 
 if __name__ == "__main__":
     args = argument_parser()
-    b = Build(project_name=args['project'])
+    b = Build(project_name=args['project'], build_id=args['buildid'], bucket=args['bucket'])
+    b.upload_artifacts()
     b.create()
     time.sleep(10)
     while b.get_details() == 'IN_PROGRESS':
